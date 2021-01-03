@@ -4,6 +4,7 @@ import csv
 import PySimpleGUI as sg
 import os
 import re
+from datetime import datetime as dt
 
 URL = 'https://www.internsg.com/jobs/{}/?f_p=107&f_i&filter_s#isg-top'
 QUERY = 'python'
@@ -34,6 +35,7 @@ def scrape(url, query, page_amount):
                 title = div.find('h1', 'entry-title').get_text()
                 date = re.findall('\d+ [a-zA-Z]{3} \d{4}', div.get_text())[0]
                 res.append((title, date, link))
+        res.sort(key=lambda i:dt.strptime(i[1], "%d %b %Y"), reverse=True)
 
     with open('res.txt', 'w') as f:
         csv.writer(f).writerows(res)
@@ -63,7 +65,6 @@ layout = [
 
 # Create the Window
 window = sg.Window('InternSG Scraper', layout)
-
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
     event, values = window.read()
