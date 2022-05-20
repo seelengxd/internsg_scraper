@@ -42,13 +42,13 @@ def scrape(url, query, page_amount):
     return res
 
 def read():
-    try:
+    if 'res.txt' in os.listdir():
         with open('res.txt') as f:
             res = list(csv.reader(f))
         return res
-    except:
-        scrape()
-        read()
+    else:
+        scrape(URL, QUERY, PAGE_AMOUNT)
+        return read()
 
 res = read()
 
